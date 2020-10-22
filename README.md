@@ -1,2 +1,2 @@
 # CadSimples-Progress
-Cadastro simples de produtos usando API Rest e criando relatório dos produtos cadastrados
+Exemplo de uma tela de cadastro simples desenvolvida em progress utilizando api rest e fazendo geração de relatórios em excel dos produtos cadastrados.
