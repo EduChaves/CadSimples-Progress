@@ -65,13 +65,11 @@ CREATE WIDGET-POOL.
 &Scoped-define KEY-PHRASE TRUE
 
 /* Definitions for BROWSE br_table                                      */
-&Scoped-define FIELDS-IN-QUERY-br_table testeJson.id testeJson.produto ~
-testeJson.quantidade testeJson.unMedida testeJson.valor testeJson.codigo 
-&Scoped-define ENABLED-FIELDS-IN-QUERY-br_table 
-&Scoped-define QUERY-STRING-br_table FOR EACH testeJson WHERE ~{&KEY-PHRASE} NO-LOCK ~
-    ~{&SORTBY-PHRASE}
-&Scoped-define OPEN-QUERY-br_table OPEN QUERY br_table FOR EACH testeJson WHERE ~{&KEY-PHRASE} NO-LOCK ~
-    ~{&SORTBY-PHRASE}.
+&Scoped-define FIELDS-IN-QUERY-br_table testeJson.id testeJson.produto testeJson.quantidade testeJson.unMedida testeJson.valor testeJson.codigo   
+&Scoped-define ENABLED-FIELDS-IN-QUERY-br_table   
+&Scoped-define SELF-NAME br_table
+&Scoped-define QUERY-STRING-br_table FOR EACH testeJson WHERE ~{&KEY-PHRASE} NO-LOCK     ~{&SORTBY-PHRASE}
+&Scoped-define OPEN-QUERY-br_table OPEN QUERY {&SELF-NAME} FOR EACH testeJson WHERE ~{&KEY-PHRASE} NO-LOCK     ~{&SORTBY-PHRASE}.
 &Scoped-define TABLES-IN-QUERY-br_table testeJson
 &Scoped-define FIRST-TABLE-IN-QUERY-br_table testeJson
 
@@ -143,7 +141,7 @@ DEFINE QUERY br_table FOR
 
 /* Browse definitions                                                   */
 DEFINE BROWSE br_table
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS br_table B-table-Win _STRUCTURED
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS br_table B-table-Win _FREEFORM
   QUERY br_table NO-LOCK DISPLAY
       testeJson.id FORMAT "x(20)":U
       testeJson.produto FORMAT "x(20)":U
@@ -228,14 +226,11 @@ ASSIGN
 
 &ANALYZE-SUSPEND _QUERY-BLOCK BROWSE br_table
 /* Query rebuild information for BROWSE br_table
-     _TblList          = "mgesp.testeJson"
+     _START_FREEFORM
+OPEN QUERY {&SELF-NAME} FOR EACH testeJson WHERE ~{&KEY-PHRASE} NO-LOCK
+    ~{&SORTBY-PHRASE}.
+     _END_FREEFORM
      _Options          = "NO-LOCK KEY-PHRASE SORTBY-PHRASE"
-     _FldNameList[1]   = mgesp.testeJson.id
-     _FldNameList[2]   = mgesp.testeJson.produto
-     _FldNameList[3]   = mgesp.testeJson.quantidade
-     _FldNameList[4]   = mgesp.testeJson.unMedida
-     _FldNameList[5]   = mgesp.testeJson.valor
-     _FldNameList[6]   = mgesp.testeJson.codigo
      _Query            is NOT OPENED
 */  /* BROWSE br_table */
 &ANALYZE-RESUME

@@ -1,26 +1,28 @@
 &ANALYZE-SUSPEND _VERSION-NUMBER UIB_v8r12 GUI ADM1
 &ANALYZE-RESUME
-/* Connected Databases 
-          mgesp            PROGRESS
-*/
 &Scoped-define WINDOW-NAME CURRENT-WINDOW
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS V-table-Win 
-/*:T *******************************************************************************
-** Copyright TOTVS S.A. (2009)
-** Todos os Direitos Reservados.
-**
-** Este fonte e de propriedade exclusiva da TOTVS, sua reproducao
-** parcial ou total por qualquer meio, so podera ser feita mediante
-** autorizacao expressa.
-*******************************************************************************/
-{include/i-prgvrs.i V99XX999 9.99.99.999}
+/*********************************************************************
+* Copyright (C) 2000 by Progress Software Corporation. All rights    *
+* reserved. Prior versions of this work may contain portions         *
+* contributed by participants of Possenet.                           *
+*                                                                    *
+*********************************************************************/
+/*------------------------------------------------------------------------
 
-/* Chamada a include do gerenciador de licen‡as. Necessario alterar os parametros */
-/*                                                                                */
-/* <programa>:  Informar qual o nome do programa.                                 */
-/* <m¢dulo>:  Informar qual o m¢dulo a qual o programa pertence.                  */
-/*                                                                                */
-/* OBS: Para os smartobjects o parametro m¢dulo dever  ser MUT                    */
+  File:
+
+  Description: from VIEWER.W - Template for SmartViewer Objects
+
+  Input Parameters:
+      <none>
+
+  Output Parameters:
+      <none>
+
+------------------------------------------------------------------------*/
+/*          This .W file was created with the Progress UIB.             */
+/*----------------------------------------------------------------------*/
 
 /* Create an unnamed pool to store all the widgets created 
      by this procedure. This is a good default which assures
@@ -31,14 +33,10 @@
 CREATE WIDGET-POOL.
 
 /* ***************************  Definitions  ************************** */
-&Scop adm-attribute-dlg support/viewerd.w
-
-/* global variable definitions */
 
 /* Parameters Definitions ---                                           */
 
 /* Local Variable Definitions ---                                       */
-def var v-row-parent as rowid no-undo.
 
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
@@ -54,29 +52,15 @@ def var v-row-parent as rowid no-undo.
 &Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
 
 /* Name of first Frame and/or Browse and/or first Query                 */
-&Scoped-define FRAME-NAME f-main
+&Scoped-define FRAME-NAME F-Main
 
-/* External Tables                                                      */
-&Scoped-define EXTERNAL-TABLES testeJson
-&Scoped-define FIRST-EXTERNAL-TABLE testeJson
-
-
-/* Need to scope the external tables to this procedure                  */
-DEFINE QUERY external_tables FOR testeJson.
 /* Standard List Definitions                                            */
-&Scoped-Define ENABLED-FIELDS testeJson.id testeJson.produto ~
-testeJson.quantidade testeJson.unMedida testeJson.valor testeJson.codigo 
-&Scoped-define ENABLED-TABLES testeJson
-&Scoped-define FIRST-ENABLED-TABLE testeJson
-&Scoped-Define ENABLED-OBJECTS rt-mold 
-&Scoped-Define DISPLAYED-FIELDS testeJson.id testeJson.produto ~
-testeJson.quantidade testeJson.unMedida testeJson.valor testeJson.codigo 
-&Scoped-define DISPLAYED-TABLES testeJson
-&Scoped-define FIRST-DISPLAYED-TABLE testeJson
-
+&Scoped-Define ENABLED-OBJECTS h_viewer 
+&Scoped-Define DISPLAYED-OBJECTS fi-id fi-produto fi-quantidade fi-unMedida ~
+fi-valor fi-codigo 
 
 /* Custom List Definitions                                              */
-/* ADM-CREATE-FIELDS,ADM-ASSIGN-FIELDS,ADM-MODIFY-FIELDS,List-4,List-5,List-6 */
+/* ADM-CREATE-FIELDS,ADM-ASSIGN-FIELDS,List-3,List-4,List-5,List-6      */
 
 /* _UIB-PREPROCESSOR-BLOCK-END */
 &ANALYZE-RESUME
@@ -108,33 +92,51 @@ RUN set-attribute-list (
 
 
 /* Definitions of the field level widgets                               */
-DEFINE RECTANGLE rt-mold
+DEFINE VARIABLE fi-codigo AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Codigo" 
+     VIEW-AS FILL-IN 
+     SIZE 37 BY 1 NO-UNDO.
+
+DEFINE VARIABLE fi-id AS CHARACTER FORMAT "X(256)":U 
+     LABEL "ID" 
+     VIEW-AS FILL-IN 
+     SIZE 8 BY 1 NO-UNDO.
+
+DEFINE VARIABLE fi-produto AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Produto" 
+     VIEW-AS FILL-IN 
+     SIZE 22 BY 1 NO-UNDO.
+
+DEFINE VARIABLE fi-quantidade AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Quantidade" 
+     VIEW-AS FILL-IN 
+     SIZE 11 BY 1 NO-UNDO.
+
+DEFINE VARIABLE fi-unMedida AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Unidade Medida" 
+     VIEW-AS FILL-IN 
+     SIZE 22 BY 1 NO-UNDO.
+
+DEFINE VARIABLE fi-valor AS CHARACTER FORMAT "X(256)":U 
+     LABEL "Valor" 
+     VIEW-AS FILL-IN 
+     SIZE 14 BY 1 NO-UNDO.
+
+DEFINE RECTANGLE h_viewer
      EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
-     SIZE 77 BY 7.
+     SIZE 78 BY 6.5.
 
 
 /* ************************  Frame Definitions  *********************** */
 
-DEFINE FRAME f-main
-     testeJson.id AT ROW 1.5 COL 17 COLON-ALIGNED WIDGET-ID 4
-          VIEW-AS FILL-IN 
-          SIZE 21.14 BY 1
-     testeJson.produto AT ROW 2.5 COL 17 COLON-ALIGNED WIDGET-ID 6
-          VIEW-AS FILL-IN 
-          SIZE 21.14 BY 1
-     testeJson.quantidade AT ROW 3.5 COL 17 COLON-ALIGNED WIDGET-ID 8
-          VIEW-AS FILL-IN 
-          SIZE 11.14 BY 1
-     testeJson.unMedida AT ROW 4.5 COL 17 COLON-ALIGNED WIDGET-ID 10
-          VIEW-AS FILL-IN 
-          SIZE 12.14 BY 1
-     testeJson.valor AT ROW 5.5 COL 17 COLON-ALIGNED WIDGET-ID 12
-          VIEW-AS FILL-IN 
-          SIZE 16.14 BY 1
-     testeJson.codigo AT ROW 6.5 COL 17 COLON-ALIGNED WIDGET-ID 2
-          VIEW-AS FILL-IN 
-          SIZE 36.14 BY 1
-     rt-mold AT ROW 1.25 COL 2
+DEFINE FRAME F-Main
+     fi-id AT ROW 1.5 COL 18 COLON-ALIGNED WIDGET-ID 2
+     fi-produto AT ROW 2.5 COL 18 COLON-ALIGNED WIDGET-ID 6
+     fi-quantidade AT ROW 3.5 COL 18 COLON-ALIGNED WIDGET-ID 8
+     fi-unMedida AT ROW 4.5 COL 18 COLON-ALIGNED WIDGET-ID 10
+     fi-valor AT ROW 5.5 COL 18 COLON-ALIGNED WIDGET-ID 12
+     fi-codigo AT ROW 6.5 COL 18 COLON-ALIGNED WIDGET-ID 4
+     h_viewer AT ROW 1.25 COL 2 WIDGET-ID 14
     WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
          SIDE-LABELS NO-UNDERLINE THREE-D 
          AT COL 1 ROW 1 SCROLLABLE  WIDGET-ID 100.
@@ -145,7 +147,6 @@ DEFINE FRAME f-main
 &ANALYZE-SUSPEND _PROCEDURE-SETTINGS
 /* Settings for THIS-PROCEDURE
    Type: SmartViewer
-   External Tables: mgesp.testeJson
    Allow: Basic,DB-Fields
    Frames: 1
    Add Fields to: EXTERNAL-TABLES
@@ -167,8 +168,8 @@ END.
 &ANALYZE-SUSPEND _CREATE-WINDOW
 /* DESIGN Window definition (used by the UIB) 
   CREATE WINDOW V-table-Win ASSIGN
-         HEIGHT             = 7.58
-         WIDTH              = 79.29.
+         HEIGHT             = 6.83
+         WIDTH              = 79.57.
 /* END WINDOW DEFINITION */
                                                                         */
 &ANALYZE-RESUME
@@ -177,9 +178,6 @@ END.
 /* ************************* Included-Libraries *********************** */
 
 {src/adm/method/viewer.i}
-{include/c-viewer.i}
-{utp/ut-glob.i}
-{include/i_dbtype.i}
 
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
@@ -192,23 +190,35 @@ END.
 &ANALYZE-SUSPEND _RUN-TIME-ATTRIBUTES
 /* SETTINGS FOR WINDOW V-table-Win
   VISIBLE,,RUN-PERSISTENT                                               */
-/* SETTINGS FOR FRAME f-main
+/* SETTINGS FOR FRAME F-Main
    NOT-VISIBLE Size-to-Fit                                              */
 ASSIGN 
-       FRAME f-main:SCROLLABLE       = FALSE
-       FRAME f-main:HIDDEN           = TRUE.
+       FRAME F-Main:SCROLLABLE       = FALSE
+       FRAME F-Main:HIDDEN           = TRUE.
 
+/* SETTINGS FOR FILL-IN fi-codigo IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN fi-id IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN fi-produto IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN fi-quantidade IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN fi-unMedida IN FRAME F-Main
+   NO-ENABLE                                                            */
+/* SETTINGS FOR FILL-IN fi-valor IN FRAME F-Main
+   NO-ENABLE                                                            */
 /* _RUN-TIME-ATTRIBUTES-END */
 &ANALYZE-RESUME
 
 
 /* Setting information for Queries and Browse Widgets fields            */
 
-&ANALYZE-SUSPEND _QUERY-BLOCK FRAME f-main
-/* Query rebuild information for FRAME f-main
+&ANALYZE-SUSPEND _QUERY-BLOCK FRAME F-Main
+/* Query rebuild information for FRAME F-Main
      _Options          = "NO-LOCK"
      _Query            is NOT OPENED
-*/  /* FRAME f-main */
+*/  /* FRAME F-Main */
 &ANALYZE-RESUME
 
  
@@ -219,8 +229,11 @@ ASSIGN
 
 /* ***************************  Main Block  *************************** */
 
+    RUN local-disable-fields.
   &IF DEFINED(UIB_IS_RUNNING) <> 0 &THEN          
-    RUN dispatch IN THIS-PROCEDURE ('initialize':U).        
+    RUN dispatch IN THIS-PROCEDURE ('initialize':U). 
+    
+    
   &ENDIF         
   
   /************************ INTERNAL PROCEDURES ********************/
@@ -230,6 +243,29 @@ ASSIGN
 
 
 /* **********************  Internal Procedures  *********************** */
+
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE add-fields V-table-Win 
+PROCEDURE add-fields :
+/*------------------------------------------------------------------------------
+  Purpose:     
+  Parameters:  <none>
+  Notes:       
+------------------------------------------------------------------------------*/
+   CREATE testeJson.
+   ASSIGN
+       testeJson.id = fi-id:SCREEN-VALUE IN FRAME {&FRAME-NAME}
+       testeJson.produto = fi-produto:SCREEN-VALUE IN FRAME {&FRAME-NAME}
+       testeJson.quantidade = INT(fi-quantidade:SCREEN-VALUE IN FRAME {&FRAME-NAME})
+       testeJson.unMedida = fi-unMedida:SCREEN-VALUE IN FRAME {&FRAME-NAME}
+       testeJson.valor = fi-valor:SCREEN-VALUE IN FRAME {&FRAME-NAME}
+       testeJson.codigo = fi-valor:SCREEN-VALUE IN FRAME {&FRAME-NAME}.
+
+   MESSAGE "Cadastro Realizado com Sucesso!" VIEW-AS ALERT-BOX.
+
+END PROCEDURE.
+
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE adm-row-available V-table-Win  _ADM-ROW-AVAILABLE
 PROCEDURE adm-row-available :
@@ -243,15 +279,6 @@ PROCEDURE adm-row-available :
 
   /* Define variables needed by this internal procedure.             */
   {src/adm/template/row-head.i}
-
-  /* Create a list of all the tables that we need to get.            */
-  {src/adm/template/row-list.i "testeJson"}
-
-  /* Get the record ROWID's from the RECORD-SOURCE.                  */
-  {src/adm/template/row-get.i}
-
-  /* FIND each record specified by the RECORD-SOURCE.                */
-  {src/adm/template/row-find.i "testeJson"}
 
   /* Process the newly available records (i.e. display fields,
      open queries, and/or pass records on to any RECORD-TARGETS).    */
@@ -273,46 +300,8 @@ PROCEDURE disable_UI :
                we are ready to "clean-up" after running.
 ------------------------------------------------------------------------------*/
   /* Hide all frames. */
-  HIDE FRAME f-main.
+  HIDE FRAME F-Main.
   IF THIS-PROCEDURE:PERSISTENT THEN DELETE PROCEDURE THIS-PROCEDURE.
-END PROCEDURE.
-
-/* _UIB-CODE-BLOCK-END */
-&ANALYZE-RESUME
-
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-assign-record V-table-Win 
-PROCEDURE local-assign-record :
-/*------------------------------------------------------------------------------
-  Purpose:     Override standard ADM method
-  Notes:       
-------------------------------------------------------------------------------*/
-
-    /* Code placed here will execute PRIOR to standard behavior. */
-    {include/i-valid.i}
-    
-    /*:T Ponha na pi-validate todas as valida‡äes */
-    /*:T NÆo gravar nada no registro antes do dispatch do assign-record e 
-       nem na PI-validate. */
-    
-    /* Dispatch standard ADM method.                             */
-    RUN dispatch IN THIS-PROCEDURE ( INPUT 'assign-record':U ) .
-    if RETURN-VALUE = 'ADM-ERROR':U then 
-        return 'ADM-ERROR':U.
-    
-    /*:T Todos os assignïs nÆo feitos pelo assign-record devem ser feitos aqui */  
-    /* Code placed here will execute AFTER standard behavior.    */
-
-    /*CREATE testeJson.
-    ASSIGN
-        testeJson.id = id:SCREEN-VALUE IN FRAME {&FRAME-NAME}
-        testeJson.produto = produto:SCREEN-VALUE IN FRAME {&FRAME-NAME}
-        testeJson.quantidade = INT(quantidade:SCREEN-VALUE IN FRAME {&FRAME-NAME})
-        testeJson.unMedida = unMedida:SCREEN-VALUE IN FRAME {&FRAME-NAME}
-        testeJson.valor = valor:SCREEN-VALUE IN FRAME {&FRAME-NAME}
-        testeJson.codigo = codigo:SCREEN-VALUE IN FRAME {&FRAME-NAME}.*/
-
-    MESSAGE "Produto Cadastrado com Sucesso!!" VIEW-AS ALERT-BOX.
-
 END PROCEDURE.
 
 /* _UIB-CODE-BLOCK-END */
@@ -321,20 +310,23 @@ END PROCEDURE.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-disable-fields V-table-Win 
 PROCEDURE local-disable-fields :
 /*------------------------------------------------------------------------------
-  Purpose:     Override standard ADM method
+  Purpose:     
+  Parameters:  <none>
   Notes:       
 ------------------------------------------------------------------------------*/
-    
-    /* Code placed here will execute PRIOR to standard behavior. */
-    
-    /* Dispatch standard ADM method.                             */
-    RUN dispatch IN THIS-PROCEDURE ( INPUT 'disable-fields':U ) .
-    
-    /* Code placed here will execute AFTER standard behavior.    */
-    &if  defined(ADM-MODIFY-FIELDS) &then
-    disable {&ADM-MODIFY-FIELDS} with frame {&frame-name}.
-    &endif
-    
+    ASSIGN
+        fi-id:SENSITIVE IN FRAME {&FRAME-NAME} = FALSE
+        fi-produto:SENSITIVE IN FRAME {&FRAME-NAME} = FALSE
+        fi-quantidade:SENSITIVE IN FRAME {&FRAME-NAME} = FALSE
+        fi-unMedida:SENSITIVE IN FRAME {&FRAME-NAME} = FALSE
+        fi-valor:SENSITIVE IN FRAME {&FRAME-NAME} = FALSE
+        fi-codigo:SENSITIVE IN FRAME {&FRAME-NAME} = FALSE
+        fi-id:SCREEN-VALUE IN FRAME {&FRAME-NAME} = ""
+        fi-produto:SCREEN-VALUE IN FRAME {&FRAME-NAME} = ""
+        fi-quantidade:SCREEN-VALUE IN FRAME {&FRAME-NAME} = ""
+        fi-unMedida:SCREEN-VALUE IN FRAME {&FRAME-NAME} = ""
+        fi-valor:SCREEN-VALUE IN FRAME {&FRAME-NAME} = ""
+        fi-codigo:SCREEN-VALUE IN FRAME {&FRAME-NAME} = "".
 END PROCEDURE.
 
 /* _UIB-CODE-BLOCK-END */
@@ -343,61 +335,17 @@ END PROCEDURE.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE local-enable-fields V-table-Win 
 PROCEDURE local-enable-fields :
 /*------------------------------------------------------------------------------
-  Purpose:     Override standard ADM method
-  Notes:       
-------------------------------------------------------------------------------*/
-    
-    /* Code placed here will execute PRIOR to standard behavior. */
-    
-    /* Dispatch standard ADM method.                             */
-    RUN dispatch IN THIS-PROCEDURE ( INPUT 'enable-fields':U ) .
-    
-    /* Code placed here will execute AFTER standard behavior.    */
-    &if  defined(ADM-MODIFY-FIELDS) &then
-    if adm-new-record = yes then
-        enable {&ADM-MODIFY-FIELDS} with frame {&frame-name}.
-    &endif
-
-END PROCEDURE.
-
-/* _UIB-CODE-BLOCK-END */
-&ANALYZE-RESUME
-
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE pi-atualiza-parent V-table-Win 
-PROCEDURE pi-atualiza-parent :
-/*------------------------------------------------------------------------------
   Purpose:     
   Parameters:  <none>
   Notes:       
 ------------------------------------------------------------------------------*/
-    define input parameter v-row-parent-externo as rowid no-undo.
-    
-    assign v-row-parent = v-row-parent-externo.
-    
-END PROCEDURE.
-
-/* _UIB-CODE-BLOCK-END */
-&ANALYZE-RESUME
-
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _PROCEDURE Pi-validate V-table-Win 
-PROCEDURE Pi-validate :
-/*:T------------------------------------------------------------------------------
-  Purpose:Validar a viewer     
-  Parameters:  <none>
-  Notes: NÆo fazer assign aqui. Nesta procedure
-  devem ser colocadas apenas valida‡äes, pois neste ponto do programa o registro 
-  ainda nÆo foi criado.       
-------------------------------------------------------------------------------*/
-    {include/i-vldfrm.i} /*:T Valida‡Æo de dicion rio */
-    
-/*:T    Segue um exemplo de valida‡Æo de programa */
-/*       find tabela where tabela.campo1 = c-variavel and               */
-/*                         tabela.campo2 > i-variavel no-lock no-error. */
-      
-      /*:T Este include deve ser colocado sempre antes do ut-msgs.p */
-/*       {include/i-vldprg.i}                                             */
-/*       run utp/ut-msgs.p (input "show":U, input 7, input return-value). */
-/*       return 'ADM-ERROR':U.                                            */
+    ASSIGN
+        fi-id:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE
+        fi-produto:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE
+        fi-quantidade:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE
+        fi-unMedida:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE
+        fi-valor:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE
+        fi-codigo:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE.
 
 END PROCEDURE.
 
@@ -412,14 +360,9 @@ PROCEDURE send-records :
   Parameters:  see template/snd-head.i
 ------------------------------------------------------------------------------*/
 
-  /* Define variables needed by this internal procedure.               */
-  {src/adm/template/snd-head.i}
-
-  /* For each requested table, put it's ROWID in the output list.      */
-  {src/adm/template/snd-list.i "testeJson"}
-
-  /* Deal with any unexpected table requests before closing.           */
-  {src/adm/template/snd-end.i}
+  /* SEND-RECORDS does nothing because there are no External
+     Tables specified for this SmartViewer, and there are no
+     tables specified in any contained Browse, Query, or Frame. */
 
 END PROCEDURE.
 
@@ -441,7 +384,6 @@ PROCEDURE state-changed :
          or add new cases. */
       {src/adm/template/vstates.i}
   END CASE.
-  run pi-trata-state (p-issuer-hdl, p-state).
 END PROCEDURE.
 
 /* _UIB-CODE-BLOCK-END */

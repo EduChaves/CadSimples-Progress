@@ -79,7 +79,7 @@ DEFINE VAR W-Win AS WIDGET-HANDLE NO-UNDO.
 
 /* Definitions of handles for SmartObjects                              */
 DEFINE VARIABLE h_b-browser-2 AS HANDLE NO-UNDO.
-DEFINE VARIABLE h_v-viewer-2 AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-viewer-3 AS HANDLE NO-UNDO.
 
 /* Definitions of the field level widgets                               */
 DEFINE BUTTON btn-add 
@@ -190,13 +190,6 @@ IF SESSION:DISPLAY-TYPE = "GUI":U THEN
 ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
 /* END WINDOW DEFINITION                                                */
 &ANALYZE-RESUME
-&ANALYZE-SUSPEND _UIB-CODE-BLOCK _XFTR "SmartWindowCues" W-Win _INLINE
-/* Actions: adecomm/_so-cue.w ? adecomm/_so-cued.p ? adecomm/_so-cuew.p */
-/* SmartWindow,ab,49271
-Destroy on next read */
-/* _UIB-CODE-BLOCK-END */
-&ANALYZE-RESUME
-
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _INCLUDED-LIB W-Win 
 /* ************************* Included-Libraries *********************** */
@@ -262,7 +255,7 @@ DO:
     ASSIGN
         i-status = 1.
     
-    RUN local-enable-fields IN h_v-viewer-2.
+    RUN local-enable-fields IN h_v-viewer-3.
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -273,7 +266,7 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn-cancelar W-Win
 ON CHOOSE OF btn-cancelar IN FRAME F-Main /* Cancelar */
 DO:
-  RUN local-disable-fields IN h_v-viewer-2.
+  RUN local-disable-fields IN h_v-viewer-3.
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -286,7 +279,8 @@ ON CHOOSE OF btn-confirmar IN FRAME F-Main /* Confirmar */
 DO:
     IF i-status = 1 THEN
     DO:
-        RUN local-assign-record IN h_v-viewer-2.
+        RUN add-fields IN h_v-viewer-3.
+        RUN local-disable-fields IN h_v-viewer-3.
     END.
         
     ELSE 
@@ -306,7 +300,7 @@ DO:
     ASSIGN
         i-status = 2.
     
-    RUN local-enable-fields IN h_v-viewer-2.
+    //RUN local-enable-fields IN h_v-viewer-2.
   
 END.
 
@@ -333,6 +327,8 @@ END.
 /* ***************************  Main Block  *************************** */
 
 /* Include custom  Main Block code for SmartWindows. */
+
+
 {src/adm/template/windowmn.i}
 
 /* _UIB-CODE-BLOCK-END */
@@ -359,14 +355,10 @@ PROCEDURE adm-create-objects :
        RUN init-object IN THIS-PROCEDURE (
              INPUT  'bcp/v-viewer.w':U ,
              INPUT  FRAME F-Main:HANDLE ,
-             INPUT  'Initial-Lock = NO-LOCK,
-                     Hide-on-Init = no,
-                     Disable-on-Init = no,
-                     Layout = ,
-                     Create-On-Add = Yes':U ,
-             OUTPUT h_v-viewer-2 ).
-       RUN set-position IN h_v-viewer-2 ( 2.50 , 1.00 ) NO-ERROR.
-       /* Size in UIB:  ( 7.25 , 78.00 ) */
+             INPUT  'Layout = ':U ,
+             OUTPUT h_v-viewer-3 ).
+       RUN set-position IN h_v-viewer-3 ( 2.75 , 1.00 ) NO-ERROR.
+       /* Size in UIB:  ( 6.75 , 79.00 ) */
 
        RUN init-object IN THIS-PROCEDURE (
              INPUT  'bcp/b-browser.w':U ,
@@ -377,10 +369,10 @@ PROCEDURE adm-create-objects :
        /* Size in UIB:  ( 8.00 , 78.00 ) */
 
        /* Adjust the tab order of the smart objects. */
-       RUN adjust-tab-order IN adm-broker-hdl ( h_v-viewer-2 ,
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-viewer-3 ,
              btn-sair:HANDLE IN FRAME F-Main , 'AFTER':U ).
        RUN adjust-tab-order IN adm-broker-hdl ( h_b-browser-2 ,
-             h_v-viewer-2 , 'AFTER':U ).
+             h_v-viewer-3 , 'AFTER':U ).
     END. /* Page 0 */
 
   END CASE.
