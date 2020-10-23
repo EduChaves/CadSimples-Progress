@@ -41,7 +41,19 @@ CREATE WIDGET-POOL.
 /* Parameters Definitions ---                                           */
 
 /* Local Variable Definitions ---                                       */
+
 DEFINE VAR i-status AS INT NO-UNDO.
+DEFINE VAR i-contador AS INT NO-UNDO.
+
+DEFINE QUERY q-dados FOR testeJson.
+
+DEFINE TEMP-TABLE tt-json
+    FIELD id LIKE testeJson.id
+    FIELD produto LIKE testeJson.produto
+    FIELD quantidade LIKE testeJson.quantidade
+    FIELD unMedida LIKE testeJson.unMedida
+    FIELD valor LIKE testeJson.valor
+    FIELD codigo LIKE testeJson.codigo.
 
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
@@ -58,11 +70,29 @@ DEFINE VAR i-status AS INT NO-UNDO.
 
 /* Name of designated FRAME-NAME and/or first browse and/or first query */
 &Scoped-define FRAME-NAME F-Main
+&Scoped-define BROWSE-NAME h_b-browser
+
+/* Internal Tables (found by Frame, Query & Browse Queries)             */
+&Scoped-define INTERNAL-TABLES tt-json
+
+/* Definitions for BROWSE h_b-browser                                   */
+&Scoped-define FIELDS-IN-QUERY-h_b-browser tt-json.id tt-json.produto tt-json.quantidade tt-json.unMedida tt-json.valor tt-json.codigo   
+&Scoped-define ENABLED-FIELDS-IN-QUERY-h_b-browser   
+&Scoped-define SELF-NAME h_b-browser
+&Scoped-define QUERY-STRING-h_b-browser FOR EACH tt-json
+&Scoped-define OPEN-QUERY-h_b-browser OPEN QUERY h_b-browser FOR EACH tt-json.
+&Scoped-define TABLES-IN-QUERY-h_b-browser tt-json
+&Scoped-define FIRST-TABLE-IN-QUERY-h_b-browser tt-json
+
+
+/* Definitions for FRAME F-Main                                         */
+&Scoped-define OPEN-BROWSERS-IN-QUERY-F-Main ~
+    ~{&OPEN-QUERY-h_b-browser}
 
 /* Standard List Definitions                                            */
 &Scoped-Define ENABLED-OBJECTS RECT-1 btn-nav-first btn-nav-prev ~
 btn-nav-next btn-nav-last btn-add btn-edit btn-nav-trash btn-confirmar ~
-btn-cancelar btn-imprimir btn-sair tbn-gera-relatorio 
+btn-cancelar btn-imprimir btn-sair h_b-browser tbn-gera-relatorio 
 
 /* Custom List Definitions                                              */
 /* List-1,List-2,List-3,List-4,List-5,List-6                            */
@@ -78,8 +108,7 @@ btn-cancelar btn-imprimir btn-sair tbn-gera-relatorio
 DEFINE VAR W-Win AS WIDGET-HANDLE NO-UNDO.
 
 /* Definitions of handles for SmartObjects                              */
-DEFINE VARIABLE h_b-browser-2 AS HANDLE NO-UNDO.
-DEFINE VARIABLE h_v-viewer-3 AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-viewer AS HANDLE NO-UNDO.
 
 /* Definitions of the field level widgets                               */
 DEFINE BUTTON btn-add 
@@ -134,6 +163,26 @@ DEFINE RECTANGLE RECT-1
      EDGE-PIXELS 2 GRAPHIC-EDGE  NO-FILL   
      SIZE 79 BY 1.5.
 
+/* Query definitions                                                    */
+&ANALYZE-SUSPEND
+DEFINE QUERY h_b-browser FOR 
+      tt-json SCROLLING.
+&ANALYZE-RESUME
+
+/* Browse definitions                                                   */
+DEFINE BROWSE h_b-browser
+&ANALYZE-SUSPEND _UIB-CODE-BLOCK _DISPLAY-FIELDS h_b-browser W-Win _FREEFORM
+  QUERY h_b-browser DISPLAY
+      tt-json.id WIDTH 8
+ tt-json.produto WIDTH 15
+ tt-json.quantidade WIDTH 8
+ tt-json.unMedida WIDTH 15
+ tt-json.valor WIDTH 10
+ tt-json.codigo WIDTH 20
+/* _UIB-CODE-BLOCK-END */
+&ANALYZE-RESUME
+    WITH NO-ROW-MARKERS SEPARATORS SIZE 79 BY 8.25 ROW-HEIGHT-CHARS .67 FIT-LAST-COLUMN.
+
 
 /* ************************  Frame Definitions  *********************** */
 
@@ -149,6 +198,7 @@ DEFINE FRAME F-Main
      btn-cancelar AT ROW 1.25 COL 47.72 WIDGET-ID 24
      btn-imprimir AT ROW 1.25 COL 64 WIDGET-ID 18
      btn-sair AT ROW 1.25 COL 73 WIDGET-ID 20
+     h_b-browser AT ROW 10 COL 1 WIDGET-ID 200
      tbn-gera-relatorio AT ROW 18.5 COL 65 WIDGET-ID 26
      RECT-1 AT ROW 1 COL 1 WIDGET-ID 2
     WITH 1 DOWN NO-BOX KEEP-TAB-ORDER OVERLAY 
@@ -175,10 +225,10 @@ IF SESSION:DISPLAY-TYPE = "GUI":U THEN
          TITLE              = "<insert SmartWindow title>"
          HEIGHT             = 19.13
          WIDTH              = 79.72
-         MAX-HEIGHT         = 20.92
-         MAX-WIDTH          = 80
-         VIRTUAL-HEIGHT     = 20.92
-         VIRTUAL-WIDTH      = 80
+         MAX-HEIGHT         = 29.38
+         MAX-WIDTH          = 195.14
+         VIRTUAL-HEIGHT     = 29.38
+         VIRTUAL-WIDTH      = 195.14
          RESIZE             = no
          SCROLL-BARS        = no
          STATUS-AREA        = no
@@ -209,10 +259,23 @@ ELSE {&WINDOW-NAME} = CURRENT-WINDOW.
   VISIBLE,,RUN-PERSISTENT                                               */
 /* SETTINGS FOR FRAME F-Main
    FRAME-NAME                                                           */
+/* BROWSE-TAB h_b-browser btn-sair F-Main */
 IF SESSION:DISPLAY-TYPE = "GUI":U AND VALID-HANDLE(W-Win)
 THEN W-Win:HIDDEN = yes.
 
 /* _RUN-TIME-ATTRIBUTES-END */
+&ANALYZE-RESUME
+
+
+/* Setting information for Queries and Browse Widgets fields            */
+
+&ANALYZE-SUSPEND _QUERY-BLOCK BROWSE h_b-browser
+/* Query rebuild information for BROWSE h_b-browser
+     _START_FREEFORM
+OPEN QUERY h_b-browser FOR EACH tt-json.
+     _END_FREEFORM
+     _Query            is OPENED
+*/  /* BROWSE h_b-browser */
 &ANALYZE-RESUME
 
  
@@ -255,7 +318,7 @@ DO:
     ASSIGN
         i-status = 1.
     
-    RUN local-enable-fields IN h_v-viewer-3.
+    RUN local-enable-fields IN h_v-viewer.
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -266,7 +329,7 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn-cancelar W-Win
 ON CHOOSE OF btn-cancelar IN FRAME F-Main /* Cancelar */
 DO:
-  RUN local-disable-fields IN h_v-viewer-3.
+  RUN local-disable-fields IN h_v-viewer.
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -279,8 +342,20 @@ ON CHOOSE OF btn-confirmar IN FRAME F-Main /* Confirmar */
 DO:
     IF i-status = 1 THEN
     DO:
-        RUN add-fields IN h_v-viewer-3.
-        RUN local-disable-fields IN h_v-viewer-3.
+        RUN add-fields IN h_v-viewer.
+        RUN local-disable-fields IN h_v-viewer.
+        
+        FOR EACH testeJson NO-LOCK.
+            CREATE tt-json.
+            ASSIGN
+                tt-json.id = testeJson.id
+                tt-json.produto = testeJson.produto
+                tt-json.quantidade = testeJson.quantidade
+                tt-json.unMedida = testeJson.unMedida
+                tt-json.valor = testeJson.valor
+                tt-json.codigo = testeJson.codigo.
+        END.
+        {&open-query-h_b-browser}
     END.
         
     ELSE 
@@ -319,6 +394,7 @@ END.
 &ANALYZE-RESUME
 
 
+&Scoped-define BROWSE-NAME h_b-browser
 &UNDEFINE SELF-NAME
 
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _MAIN-BLOCK W-Win 
@@ -353,26 +429,16 @@ PROCEDURE adm-create-objects :
 
     WHEN 0 THEN DO:
        RUN init-object IN THIS-PROCEDURE (
-             INPUT  'bcp/v-viewer.w':U ,
+             INPUT  'v-viewer.w':U ,
              INPUT  FRAME F-Main:HANDLE ,
              INPUT  'Layout = ':U ,
-             OUTPUT h_v-viewer-3 ).
-       RUN set-position IN h_v-viewer-3 ( 2.75 , 1.00 ) NO-ERROR.
+             OUTPUT h_v-viewer ).
+       RUN set-position IN h_v-viewer ( 2.50 , 1.00 ) NO-ERROR.
        /* Size in UIB:  ( 6.75 , 79.00 ) */
 
-       RUN init-object IN THIS-PROCEDURE (
-             INPUT  'bcp/b-browser.w':U ,
-             INPUT  FRAME F-Main:HANDLE ,
-             INPUT  'Layout = ':U ,
-             OUTPUT h_b-browser-2 ).
-       RUN set-position IN h_b-browser-2 ( 10.00 , 2.00 ) NO-ERROR.
-       /* Size in UIB:  ( 8.00 , 78.00 ) */
-
        /* Adjust the tab order of the smart objects. */
-       RUN adjust-tab-order IN adm-broker-hdl ( h_v-viewer-3 ,
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-viewer ,
              btn-sair:HANDLE IN FRAME F-Main , 'AFTER':U ).
-       RUN adjust-tab-order IN adm-broker-hdl ( h_b-browser-2 ,
-             h_v-viewer-3 , 'AFTER':U ).
     END. /* Page 0 */
 
   END CASE.
@@ -436,7 +502,7 @@ PROCEDURE enable_UI :
 ------------------------------------------------------------------------------*/
   ENABLE RECT-1 btn-nav-first btn-nav-prev btn-nav-next btn-nav-last btn-add 
          btn-edit btn-nav-trash btn-confirmar btn-cancelar btn-imprimir 
-         btn-sair tbn-gera-relatorio 
+         btn-sair h_b-browser tbn-gera-relatorio 
       WITH FRAME F-Main IN WINDOW W-Win.
   {&OPEN-BROWSERS-IN-QUERY-F-Main}
   VIEW W-Win.
@@ -469,9 +535,14 @@ PROCEDURE send-records :
   Parameters:  see template/snd-head.i
 ------------------------------------------------------------------------------*/
 
-  /* SEND-RECORDS does nothing because there are no External
-     Tables specified for this SmartWindow, and there are no
-     tables specified in any contained Browse, Query, or Frame. */
+  /* Define variables needed by this internal procedure.               */
+  {src/adm/template/snd-head.i}
+
+  /* For each requested table, put it's ROWID in the output list.      */
+  {src/adm/template/snd-list.i "tt-json"}
+
+  /* Deal with any unexpected table requests before closing.           */
+  {src/adm/template/snd-end.i}
 
 END PROCEDURE.
 

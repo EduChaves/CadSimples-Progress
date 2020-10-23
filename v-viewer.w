@@ -38,6 +38,8 @@ CREATE WIDGET-POOL.
 
 /* Local Variable Definitions ---                                       */
 
+DEFINE VAR i-contador AS INT NO-UNDO.
+
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
 
@@ -51,7 +53,7 @@ CREATE WIDGET-POOL.
 
 &Scoped-define ADM-SUPPORTED-LINKS Record-Source,Record-Target,TableIO-Target
 
-/* Name of first Frame and/or Browse and/or first Query                 */
+/* Name of designated FRAME-NAME and/or first browse and/or first query */
 &Scoped-define FRAME-NAME F-Main
 
 /* Standard List Definitions                                            */
@@ -191,7 +193,7 @@ END.
 /* SETTINGS FOR WINDOW V-table-Win
   VISIBLE,,RUN-PERSISTENT                                               */
 /* SETTINGS FOR FRAME F-Main
-   NOT-VISIBLE Size-to-Fit                                              */
+   NOT-VISIBLE FRAME-NAME Size-to-Fit                                   */
 ASSIGN 
        FRAME F-Main:SCROLLABLE       = FALSE
        FRAME F-Main:HIDDEN           = TRUE.
@@ -251,16 +253,19 @@ PROCEDURE add-fields :
   Parameters:  <none>
   Notes:       
 ------------------------------------------------------------------------------*/
-   CREATE testeJson.
-   ASSIGN
-       testeJson.id = fi-id:SCREEN-VALUE IN FRAME {&FRAME-NAME}
-       testeJson.produto = fi-produto:SCREEN-VALUE IN FRAME {&FRAME-NAME}
-       testeJson.quantidade = INT(fi-quantidade:SCREEN-VALUE IN FRAME {&FRAME-NAME})
-       testeJson.unMedida = fi-unMedida:SCREEN-VALUE IN FRAME {&FRAME-NAME}
-       testeJson.valor = fi-valor:SCREEN-VALUE IN FRAME {&FRAME-NAME}
-       testeJson.codigo = fi-valor:SCREEN-VALUE IN FRAME {&FRAME-NAME}.
+    ASSIGN
+        i-contador = 0.
 
-   MESSAGE "Cadastro Realizado com Sucesso!" VIEW-AS ALERT-BOX.
+   FIND FIRST testeJson NO-LOCK.
+   IF AVAIL testeJson THEN
+   DO:
+       MESSAGE testeJson.id VIEW-AS ALERT-BOX.
+   END.
+   ELSE
+       MESSAGE "Else" VIEW-AS ALERT-BOX.
+   
+
+   //MESSAGE "Cadastro Realizado com Sucesso!" VIEW-AS ALERT-BOX.
 
 END PROCEDURE.
 
@@ -340,7 +345,7 @@ PROCEDURE local-enable-fields :
   Notes:       
 ------------------------------------------------------------------------------*/
     ASSIGN
-        fi-id:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE
+       // fi-id:SENSITIVE IN FRAME {&FRAME-NAME} = FALSE
         fi-produto:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE
         fi-quantidade:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE
         fi-unMedida:SENSITIVE IN FRAME {&FRAME-NAME} = TRUE
