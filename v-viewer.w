@@ -261,8 +261,10 @@ PROCEDURE add-fields :
    DO:
        MESSAGE testeJson.id VIEW-AS ALERT-BOX.
    END.
-   ELSE
-       MESSAGE "Else" VIEW-AS ALERT-BOX.
+   ELSE DO:
+        MESSAGE "Else" VIEW-AS ALERT-BOX.
+   END.
+      
    
 
    //MESSAGE "Cadastro Realizado com Sucesso!" VIEW-AS ALERT-BOX.

@@ -108,7 +108,7 @@ btn-cancelar btn-imprimir btn-sair h_b-browser tbn-gera-relatorio
 DEFINE VAR W-Win AS WIDGET-HANDLE NO-UNDO.
 
 /* Definitions of handles for SmartObjects                              */
-DEFINE VARIABLE h_v-viewer AS HANDLE NO-UNDO.
+DEFINE VARIABLE h_v-viewer-2 AS HANDLE NO-UNDO.
 
 /* Definitions of the field level widgets                               */
 DEFINE BUTTON btn-add 
@@ -318,7 +318,7 @@ DO:
     ASSIGN
         i-status = 1.
     
-    RUN local-enable-fields IN h_v-viewer.
+    RUN local-enable-fields IN h_v-viewer-2.
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -329,7 +329,7 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL btn-cancelar W-Win
 ON CHOOSE OF btn-cancelar IN FRAME F-Main /* Cancelar */
 DO:
-  RUN local-disable-fields IN h_v-viewer.
+  RUN local-disable-fields IN h_v-viewer-2.
 END.
 
 /* _UIB-CODE-BLOCK-END */
@@ -342,8 +342,8 @@ ON CHOOSE OF btn-confirmar IN FRAME F-Main /* Confirmar */
 DO:
     IF i-status = 1 THEN
     DO:
-        RUN add-fields IN h_v-viewer.
-        RUN local-disable-fields IN h_v-viewer.
+        RUN add-fields IN h_v-viewer-2.
+        RUN local-disable-fields IN h_v-viewer-2.
         
         FOR EACH testeJson NO-LOCK.
             CREATE tt-json.
@@ -355,6 +355,8 @@ DO:
                 tt-json.valor = testeJson.valor
                 tt-json.codigo = testeJson.codigo.
         END.
+        ELSE
+            MESSAGE "ELSE FOR" VIEW-AS ALERT-BOX.
         {&open-query-h_b-browser}
     END.
         
@@ -432,12 +434,12 @@ PROCEDURE adm-create-objects :
              INPUT  'v-viewer.w':U ,
              INPUT  FRAME F-Main:HANDLE ,
              INPUT  'Layout = ':U ,
-             OUTPUT h_v-viewer ).
-       RUN set-position IN h_v-viewer ( 2.50 , 1.00 ) NO-ERROR.
+             OUTPUT h_v-viewer-2 ).
+       RUN set-position IN h_v-viewer-2 ( 2.50 , 1.00 ) NO-ERROR.
        /* Size in UIB:  ( 6.75 , 79.00 ) */
 
        /* Adjust the tab order of the smart objects. */
-       RUN adjust-tab-order IN adm-broker-hdl ( h_v-viewer ,
+       RUN adjust-tab-order IN adm-broker-hdl ( h_v-viewer-2 ,
              btn-sair:HANDLE IN FRAME F-Main , 'AFTER':U ).
     END. /* Page 0 */
 
